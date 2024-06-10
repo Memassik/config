@@ -1,0 +1,14 @@
+configuration
+{
+    terminal: "/usr/bin/st";
+    padding: 20              ;                                                                                                                            
+    line-padding: 2          ;                                                                                                                            
+    show-icons: true         ;                                                                                                                            
+    color-enabled: true      ;                                                                                                                            
+    hide-scrollbar: true     ;                                                                                                                            
+    font: "Iosevka 13";
+}
+//@theme "/usr/share/rofi/themes/gruvbox-dark-hard.rasi"
+//@theme "/usr/share/rofi/themes/catppuccin-mocha.rasi"
+//@theme "/usr/share/rofi/themes/catppuccin-mocha.rasi"
+@theme "/usr/share/rofi/themes/gruvbox-dark-hard.rasi"
