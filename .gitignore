@@ -1,0 +1,9 @@
+*
+!alacritty/
+!dunst/
+!i3/
+!i3blocks/config
+!picom/
+!rofi/
+!emacs/init.el
+!emacs/early-init.el
