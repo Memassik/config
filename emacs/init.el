@@ -4,6 +4,7 @@
 ;;Menu Bar
 (menu-bar-mode -1)
 
+
 ;;Scroll Bar
 (scroll-bar-mode -1)
 
@@ -40,8 +41,9 @@
 
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
-(column-number-mode)
-(global-display-line-numbers-mode t)
+;; (column-number-mode)
+(setq display-line-numbers-type 'relative)
+(global-display-line-numbers-mode)
 ;;Disable Line Numbers For Some Modes
 (dolist (mode '(org-mode-hook
 		term-mode-hook
@@ -68,7 +70,7 @@
 ;;Packages
 (use-package gruvbox-theme
   :init
-  (load-theme 'gruvbox-dark-medium t))
+  (load-theme 'gruvbox-dark-hard t))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
@@ -93,14 +95,24 @@
   (setq evil-insert-state-cursor 'evil-normal-state-cursor)
   (setq evil-visual-state-cursor 'evil-normal-state-cursor)
   :config
-  (evil-mode 1)
   (evil-set-leader nil (kbd "C-SPC"))
-  (evil-set-leader nil (kbd "SPC") t))
+  (evil-set-leader nil (kbd "SPC") t)
+  (evil-mode 1))
 
 (use-package evil-collection
   :after evil
   :init
   (evil-collection-init))
+
+(use-package evil-surround
+  :ensure t
+  :config
+  (global-evil-surround-mode 1))
+
+(use-package evil-commentary
+  :ensure t
+  :config
+  (evil-commentary-mode))
 
 (use-package flycheck
   :config
@@ -113,20 +125,82 @@
   (setq mood-line-glyph-alist mood-line-glyphs-unicode)
   (setq mood-line-format mood-line-format-default-extended))
 
-(use-package helm
-  :diminish helm-mode
+;; Enable vertico
+(use-package vertico
+  :custom
+  ;; (vertico-scroll-margin 0) ;; Different scroll margin
+  (vertico-count 10) ;; Show more candidates
+  (vertico-resize t) ;; Grow and shrink the Vertico minibuffer
+  (vertico-cycle t) ;; Enable cycling for `vertico-next/previous'
   :init
-  (global-set-key (kbd "M-x") #'helm-M-x)
-  (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
-  (global-set-key (kbd "C-x C-f") #'helm-find-files)
-  :config
-  (require 'helm-autoloads)
-  (helm-mode 1))
+  (vertico-mode))
 
-(use-package which-key
+;; Persist history over Emacs restarts. Vertico sorts by history position.
+(use-package savehist
+  :init
+  (savehist-mode))
+
+;; A few more useful configurations...
+(use-package emacs
+  :custom
+  ;; Support opening new minibuffers from inside existing minibuffers.
+  (enable-recursive-minibuffers t)
+  ;; Emacs 28 and newer: Hide commands in M-x which do not work in the current
+  ;; mode.  Vertico commands are hidden in normal buffers. This setting is
+  ;; useful beyond Vertico.
+  (read-extended-command-predicate #'command-completion-default-include-p)
+  :init
+  ;; Add prompt indicator to `completing-read-multiple'.
+  ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
+  (defun crm-indicator (args)
+    (cons (format "[CRM%s] %s"
+                  (replace-regexp-in-string
+                   "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+                   crm-separator)
+                  (car args))
+          (cdr args)))
+  (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+
+  ;; Do not allow the cursor in the minibuffer prompt
+  (setq minibuffer-prompt-properties
+        '(read-only t cursor-intangible t face minibuffer-prompt))
+  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode))
+
+;; Optionally use the `orderless' completion style.
+(use-package orderless
+  :custom
+  ;; Configure a custom style dispatcher (see the Consult wiki)
+  ;; (orderless-style-dispatchers '(+orderless-consult-dispatch orderless-affix-dispatch))
+  ;; (orderless-component-separator #'orderless-escapable-split-on-space)
+  (completion-styles '(substring orderless basic))
+  (completion-category-defaults nil)
+  (completion-category-overrides '((file (styles partial-completion)))))
+
+(use-package eglot
   :config
-  (setq which-key-idle-delay 0.2)
-  (which-key-mode))
+  (progn
+    (customize-set-variable 'eglot-autoshutdown t)
+    (customize-set-variable 'eglot-extend-to-xref t)
+    (with-eval-after-load 'eglot
+        (setq completion-category-defaults nil)
+        (add-to-list 'eglot-server-programs
+            '((c-mode c++-mode)
+                 . ("clangd"
+                       "-j=8"
+                       "--malloc-trim"
+                       "--log=error"
+                       "--background-index"
+                       "--clang-tidy"
+                       "--cross-file-rename"
+                       "--completion-style=detailed"
+                       "--pch-storage=memory"
+                       "--header-insertion=never"
+                       "--header-insertion-decorators=0"
+		       "--function-arg-placeholders"))))
+
+    (add-hook 'c-mode-hook #'eglot-ensure)
+    (add-hook 'c++-mode-hook #'eglot-ensure)
+    (add-hook 'rustic-mode-hook #'eglot-ensure)))
 
 (use-package yasnippet
   :config
@@ -135,14 +209,27 @@
 
 (use-package yasnippet-snippets
   :after yasnippet)
+
 (use-package company
-  :bind
-      (:map company-active-map
-            ("<tab>" . company-complete-selection))
-  :hook ('after-init-hook . company-mode)
-  :custom
-  (setq company-minimum-prefix-length 1))
+  :config
+  (setq company-minimum-prefix-length 1)
+  (add-hook 'after-init-hook 'global-company-mode))
 
 (use-package company-box
   :hook (company-mode . company-box-mode))
 
+(setq-default c-basic-offset 4)
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(orderless vertico mood-line flycheck evil-commentary evil-surround evil-collection evil all-the-icons which-key rainbow-delimiters gruvbox-theme diminish)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
