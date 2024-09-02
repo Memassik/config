@@ -1,10 +1,10 @@
 *
-!alacritty/
-!dunst/
-!i3/
+!alacritty/*
+!dunst/*
+!i3/*
 !i3blocks/config
-!picom/
-!rofi/
+!picom/*
+!rofi/*
 !emacs/init.el
 !emacs/early-init.el
-!kitty/
+!kitty/*
