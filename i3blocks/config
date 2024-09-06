@@ -47,18 +47,18 @@ signal=10
 # Memory usage
 #
 # The type defaults to "mem" if the instance is not specified.
-#[memory]
-#command=$SCRIPT_DIR/memory/memory
-#label=MEM
-#separator=false
-#interval=30
+[memory]
+command=$SCRIPT_DIR/memory/memory
+label=MEM
+separator=false
+interval=30
 #
-#[memory]
-#command=$SCRIPT_DIR/memory/memory
-#label=SWAP
-#instance=swap
-#separator=false
-#interval=30
+[memory]
+command=$SCRIPT_DIR/memory/memory
+label=SWAP
+instance=swap
+separator=true
+interval=30
 
 # Disk usage
 #
@@ -81,12 +81,12 @@ signal=10
 #interval=10
 #separator=false
 
-#[wifi]
-#command=$SCRIPT_DIR/wifi/wifi
-#INTERFACE=wlp3s0
-#label=wifi:
-#interval=10
-#separator=true
+# [wifi]
+# command=$SCRIPT_DIR/wifi/wifi
+# #INTERFACE=wlan0
+# label=wifi:
+# interval=10
+# separator=true
 
 #[bandwidth]
 #INTERFACE=eth0
@@ -110,10 +110,11 @@ separator=true
 # Battery indicator
 #
 # The battery instance defaults to 0.
-#[battery]
-#label=BAT
-#label=⚡
-#interval=30
+[battery]
+command=$SCRIPT_DIR/battery/battery
+label=BAT
+label=⚡   
+interval=30
 
 
 # Generic media player support
@@ -139,8 +140,8 @@ separator=true
 # The script may be called with -w and -c switches to specify thresholds,
 # see the script for details.
 [temperature]
-#command=$SCRIPT_DIR/temperature/temperature
-command=tmp=$(sensors | grep -i "AMD TSI Addr 98h:");echo ${tmp#*:} | cut -c1-7
+command=$SCRIPT_DIR/temperature/temperature
+# command=tmp=$(sensors | grep -i "AMD TSI Addr 98h:");echo ${tmp#*:} | cut -c1-7
 label=TEMP 
 interval=1
 
@@ -151,11 +152,11 @@ interval=1
 #separator=true
 
 
-[fan]
-label=FAN
-command=rpm=$(sensors | grep -i "fan5");echo ${rpm#*:} | cut -c1-7
-interval=1
-separator=true
+# [fan]
+# label=FAN
+# command=rpm=$(sensors | grep -i "fan5");echo ${rpm#*:} | cut -c1-7
+# interval=1
+# separator=true
 
 # Keyboard Language
 #
