@@ -71,7 +71,7 @@ exec --no-startup-id picom -b
 exec --no-startup-id numlockx on
 
 #setup Wallpapaers
-exec --no-startup-id feh --bg-scale ~/Pictures/Wallpapers/17.jpg --bg-scale ~/Pictures/Wallpapers/18.jpg
+exec --no-startup-id feh --bg-scale ~/Pictures/1.jpg 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
@@ -83,7 +83,8 @@ tiling_drag modifier titlebar
 bindsym $mod+F1 exec chromium
 
 #start File Manager
-bindsym $mod+F2 exec pcmanfm
+#bindsym $mod+F2 exec pcmanfm
+bindsym $mod+F2 exec --no-startup-id alacritty -e 'mc'
 
 # start a terminal
 bindsym $mod+Return exec alacritty
