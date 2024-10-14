@@ -20,7 +20,7 @@ set $mod Mod4
 exec_always --no-startup-id dunst ~/.config/dunst/dunstrc
 
 #Audio Settings
-bindsym $mod+m exec --no-startup-id st -e 'pulsemixer'
+bindsym $mod+m exec --no-startup-id alacritty -e 'pulsemixer'
 bindsym $mod+Shift+m exec --no-startup-id coppwr
 
 # Font for window titles. Will also be used by the bar unless a different font
