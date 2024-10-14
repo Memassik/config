@@ -160,9 +160,9 @@ interval=1
 
 # Keyboard Language
 #
-[kbdd_layout]
-command=$SCRIPT_DIR/kbdd_layout/kbdd_layout
-interval=persist
+#[kbdd_layout]
+#command=$SCRIPT_DIR/kbdd_layout/kbdd_layout
+#interval=persist
 
 # Date Time
 #
