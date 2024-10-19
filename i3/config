@@ -80,7 +80,7 @@ floating_modifier $mod
 tiling_drag modifier titlebar
 
 #start Chromium Browser
-bindsym $mod+F1 exec chromium
+bindsym $mod+F1 exec firefox
 
 #start File Manager
 bindsym $mod+F2 exec --no-startup-id st -e 'mc'
